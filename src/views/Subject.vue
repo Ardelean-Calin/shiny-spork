@@ -33,8 +33,8 @@
 
       <v-data-table :headers="headers" :items="tableItems" class="elevation-1" hide-actions>
         <template slot="headers" slot-scope="props">
-          <th v-for="header in props.headers" class="headerCell" :key="header.value">
-            {{header.text}}
+          <th v-for="header in props.headers" :key="header.value">
+            <div class="headerCell">{{header.text}}</div>
           </th>
         </template>
         <template slot="items" slot-scope="props">
@@ -360,9 +360,7 @@ export default {
 }
 
 .headerCell {
-  max-width: 20rem;
-  text-overflow: ellipsis;
-  overflow: hidden;
+  white-space: pre-wrap;
 }
 
 .mainDiv {
