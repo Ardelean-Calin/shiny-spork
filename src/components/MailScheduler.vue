@@ -16,7 +16,7 @@
       </div>
       <div class="datePicker">
         <p class="text-xs-left dateText">Incepand cu data de: </p>
-        <v-date-picker v-model="startDate"></v-date-picker>
+        <v-date-picker v-model="startDate" landscape scrollable full-width></v-date-picker>
       </div>
     </v-card>
     <div class="btnDiv">
@@ -24,7 +24,7 @@
         <v-icon left>cancel</v-icon>
         Anulează
       </v-btn>
-      <v-btn color="primary" @click.native="$emit('input')">
+      <v-btn :disabled="!(email && startDate)" color="primary" @click.native="updatePreferences">
         <v-icon left>save</v-icon>
         Salvează
       </v-btn>
@@ -34,12 +34,26 @@
 
 <script>
 export default {
-  props: ["value"],
+  props: {
+    value: {
+      type: Boolean,
+      default: false
+    },
+    subject: {
+      type: Object
+    }
+  },
   data: function() {
     return {
-      email: "acp.calin@gmail.com",
-      startDate: "2018-03-02",
-      frequency: 0
+      email: this.subject.hasOwnProperty("raport")
+        ? this.subject.raport.email
+        : "",
+      startDate: this.subject.hasOwnProperty("raport")
+        ? this.subject.raport.startDate
+        : "",
+      frequency: this.subject.hasOwnProperty("raport")
+        ? this.subject.raport.frequency
+        : 1
     };
   },
   computed: {
@@ -54,6 +68,16 @@ export default {
         default:
           break;
       }
+    }
+  },
+  methods: {
+    updatePreferences: function() {
+      this.subject.raport = {
+        email: this.email,
+        frequency: this.frequency,
+        startDate: this.startDate
+      };
+      this.$emit("input");
     }
   }
 };

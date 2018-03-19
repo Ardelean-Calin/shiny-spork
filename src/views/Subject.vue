@@ -4,7 +4,12 @@
       <h1 class="display-2" style="max-width: 80%">
         {{subject.titlu}}
         <span>
-          <v-btn @click="showDialog = !showDialog" depressed outline color="primary" style="font-weight: 600">
+          <v-btn 
+            @click="showDialog = !showDialog"
+            color="primary"
+            style="font-weight: 600" 
+            v-if="dataReady"
+            depressed outline>
             <v-icon left>mail</v-icon>
             E-mail rapoarte
           </v-btn>
@@ -61,7 +66,7 @@
         </v-btn>
       </div>
     </div>
-    <mail-scheduler v-model="showDialog" />
+    <mail-scheduler v-if="dataReady" :subject="subject" @input="pushSubject" v-model="showDialog" />
   </v-card>
 </template>
 
@@ -86,7 +91,20 @@ export default {
         this.subject = snapshot.val();
         this.loadQuestions();
         this.loadAnswers();
+        this.dataReady = true;
       });
+  },
+  data: function() {
+    return {
+      subject: {},
+      qCourses: {},
+      qLaboratories: {},
+      dates: {},
+      answers: { cursuri: {}, laboratoare: {} },
+      selectedItem: null,
+      showDialog: false,
+      dataReady: false
+    };
   },
   computed: {
     selectedDate: function() {
@@ -160,17 +178,6 @@ export default {
     questions: function() {
       return { ...this.qCourses, ...this.qLaboratories };
     }
-  },
-  data: function() {
-    return {
-      subject: {},
-      qCourses: {},
-      qLaboratories: {},
-      dates: {},
-      answers: { cursuri: {}, laboratoare: {} },
-      selectedItem: null,
-      showDialog: false
-    };
   },
   methods: {
     exportTable() {
@@ -333,6 +340,12 @@ export default {
           this.qLaboratories = snapshot.val();
           // this.$forceUpdate();
         });
+    },
+    pushSubject: function() {
+      firebase
+        .database()
+        .ref(`discipline/${this.$route.params.id}`)
+        .set(this.subject);
     }
   }
 };
