@@ -7,12 +7,12 @@
 
 <script>
 // @ is an alias to /src
-import StarRating from "@/components/StarRating.vue";
+import HomeComponent from "@/components/HomeComponent.vue";
 
 export default {
   name: "home",
   components: {
-    StarRating
+    HomeComponent
   }
 };
 </script>
