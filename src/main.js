@@ -14,7 +14,7 @@ firebase.initializeApp(firebaseConfig);
 
 Vue.config.productionTip = false;
 Vue.use(Vuetify);
-// test commit
+
 new Vue({
   router,
   render: h => h(App)
