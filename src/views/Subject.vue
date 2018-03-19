@@ -4,7 +4,7 @@
       <h1 class="display-2" style="max-width: 80%">
         {{subject.titlu}}
         <span>
-          <v-btn @click="showDialog = !showDialog" round depressed outline color="primary" style="font-weight: 600">
+          <v-btn @click="showDialog = !showDialog" depressed outline color="primary" style="font-weight: 600">
             <v-icon left>mail</v-icon>
             E-mail rapoarte
           </v-btn>
@@ -177,7 +177,7 @@ export default {
       const csv = this.getCSVFromItems(this.tableItems);
 
       this.downloadData(
-        csv,
+        "sep=,\n" + csv,
         `${this.truncateString(this.subject.titlu)} - ${this.selectedItem}.csv`
       );
     },
@@ -212,7 +212,7 @@ export default {
         return csvString;
       });
       this.downloadData(
-        csvStrings.join(),
+        "sep=,\n" + csvStrings.join(),
         `${this.truncateString(this.subject.titlu, 60)}.csv`
       );
     },
@@ -268,7 +268,7 @@ export default {
             tempObj[removeDiacritics(this.qLaboratories[key].title)] =
               item[key];
           } else if (key == "additionalComments") {
-            tempObj["Comentarii aditionale"] = item[key];
+            tempObj["Comentarii aditionale"] = item[key].map(removeDiacritics);
           }
         }
         return tempObj;
