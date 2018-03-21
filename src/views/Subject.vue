@@ -3,18 +3,34 @@
     <div class="headerDiv">
       <h1 class="display-2" style="max-width: 80%">
         {{subject.titlu}}
-        <span>
-          <v-btn 
-            @click="showDialog = !showDialog"
-            color="primary"
-            style="font-weight: 600" 
-            v-if="dataReady"
-            depressed outline>
-            <v-icon left>mail</v-icon>
-            E-mail rapoarte
-          </v-btn>
-        </span>
       </h1>
+      <v-btn 
+        @click="showMailDialog = !showMailDialog"
+        color="primary"
+        style="font-weight: 600" 
+        v-if="dataReady"
+        depressed outline>
+        <v-icon left>mail</v-icon>
+        E-mail rapoarte
+      </v-btn>
+      <v-btn 
+        @click="showScheduleDialog = !showScheduleDialog"
+        color="primary"
+        style="font-weight: 600" 
+        v-if="dataReady"
+        depressed outline>
+        <v-icon left>date_range</v-icon>
+        Editare orar
+      </v-btn>
+      <v-btn 
+        @click="showItemsDialog = !showItemsDialog"
+        color="primary"
+        style="font-weight: 600" 
+        v-if="dataReady"
+        depressed outline>
+        <v-icon left>view_list</v-icon>
+        Cursuri & Laboratoare
+      </v-btn>
       <v-btn @click="exportData" class="exportBtn" color="primary" large>
         <v-icon left>cloud_download</v-icon>
         Exportare csv
@@ -66,7 +82,9 @@
         </v-btn>
       </div>
     </div>
-    <mail-scheduler v-if="dataReady" :subject="subject" @input="pushSubject" v-model="showDialog" />
+    <mail-scheduler v-if="dataReady" :subject="subject" @input="pushSubject" v-model="showMailDialog" />
+    <schedule-editor v-if="dataReady" v-model="showScheduleDialog" />
+    <items-editor v-if="dataReady" :subject="subject" v-model="showItemsDialog" />
   </v-card>
 </template>
 
@@ -77,11 +95,15 @@ import { remove as removeDiacritics } from "diacritics";
 import firebase from "firebase/app";
 import StarRating from "@/components/StarRating.vue";
 import MailScheduler from "@/components/MailScheduler.vue";
+import ScheduleEditor from "@/components/ScheduleEditor.vue";
+import ItemsEditor from "@/components/ItemsEditor.vue";
 
 export default {
   components: {
     StarRating,
-    MailScheduler
+    MailScheduler,
+    ScheduleEditor,
+    ItemsEditor
   },
   created: function() {
     firebase
@@ -102,7 +124,9 @@ export default {
       dates: {},
       answers: { cursuri: {}, laboratoare: {} },
       selectedItem: null,
-      showDialog: false,
+      showMailDialog: false,
+      showScheduleDialog: false,
+      showItemsDialog: false,
       dataReady: false
     };
   },
@@ -379,7 +403,8 @@ export default {
 .mainDiv {
   position: relative;
   text-align: left;
-  margin: 2rem 15%;
+  margin: 2rem auto;
+  width: 80rem;
 }
 
 .rating {

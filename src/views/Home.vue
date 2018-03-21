@@ -1,7 +1,6 @@
 <template>
   <div class="home">
-    <StarRating :rating="4.5">
-    </StarRating>
+    <home-component/>
   </div>
 </template>
 
@@ -16,3 +15,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.home {
+  height: 100%;
+}
+</style>

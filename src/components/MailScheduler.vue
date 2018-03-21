@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :value="value" @input="$emit('input')" max-width="30%" persistent>
+  <v-dialog :value="value" @input="$emit('input')" max-width="30%">
     <h1 class="display-1 text-xs-left">Planificare rapoarte</h1>
     <v-card class="mainCard" flat>
       <div class="formContainer">
