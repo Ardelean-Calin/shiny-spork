@@ -1,7 +1,7 @@
 <template>
   <div class="mainContainer">
     <div class="cardsContainer">
-      <v-card v-for="(disciplina, key) in discipline" :key="key" class="disciplina" :to="`subjects/${key}`">
+      <v-card v-for="(disciplina, key) in discipline" :key="key" class="disciplina" :to="`subjects/${key}`" hover>
         <v-card-media :src="disciplina.imageURL" height="15rem"></v-card-media>
         <div class="cardTitle" style="text-align: center">{{ disciplina.titlu }}</div>
       </v-card>

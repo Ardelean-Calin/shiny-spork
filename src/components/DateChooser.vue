@@ -24,7 +24,7 @@ export default {
   methods: {
     submitDate() {
       this.$refs.menu.save(this.selectedDate);
-      this.$emit("input", this.selectedDate);
+      this.$emit("input", new Date(this.selectedDate).toDateString());
     }
   }
 };

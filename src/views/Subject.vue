@@ -1,91 +1,104 @@
 <template>
-  <v-card class="mainDiv">
-    <div class="headerDiv">
-      <h1 class="display-2" style="max-width: 80%">
-        {{subject.titlu}}
-      </h1>
-      <v-btn 
-        @click="showMailDialog = !showMailDialog"
-        color="primary"
-        style="font-weight: 600" 
-        v-if="dataReady"
-        depressed outline>
-        <v-icon left>mail</v-icon>
-        E-mail rapoarte
-      </v-btn>
-      <v-btn 
-        @click="showScheduleDialog = !showScheduleDialog"
-        color="primary"
-        style="font-weight: 600" 
-        v-if="dataReady"
-        depressed outline>
-        <v-icon left>date_range</v-icon>
-        Editare orar
-      </v-btn>
-      <v-btn 
-        @click="showItemsDialog = !showItemsDialog"
-        color="primary"
-        style="font-weight: 600" 
-        v-if="dataReady"
-        depressed outline>
-        <v-icon left>view_list</v-icon>
-        Cursuri & Laboratoare
-      </v-btn>
-      <v-btn @click="exportData" class="exportBtn" color="primary" large>
-        <v-icon left>cloud_download</v-icon>
-        Exportare csv
-      </v-btn>
-      <br>
-      <star-rating class="rating" :rating="generalRating"/>
-    </div>
-    <br>
-    <div class="contentDiv">
-      <h1><span style="font-weight: 500; color: hsl(0, 0%, 49%)">Recenzii disponibile: </span>{{noReviews}} </h1>
+  <div style="height: 100%">
+    <v-card class="mainDiv">
+      <div class="headerDiv">
+        <h1 class="display-2" style="max-width: 80%">
+          {{subject.titlu}}
+        </h1>
+        <v-btn 
+          @click="showMailDialog = !showMailDialog"
+          color="primary"
+          style="font-weight: 600" 
+          v-if="dataReady"
+          depressed outline>
+          <v-icon left>mail</v-icon>
+          E-mail rapoarte
+        </v-btn>
+        <v-btn 
+          @click="showScheduleDialog = !showScheduleDialog"
+          color="primary"
+          style="font-weight: 600" 
+          v-if="dataReady"
+          depressed outline>
+          <v-icon left>date_range</v-icon>
+          Editare orar
+        </v-btn>
+        <v-btn 
+          @click="showItemsDialog = !showItemsDialog"
+          color="primary"
+          style="font-weight: 600" 
+          v-if="dataReady"
+          depressed outline>
+          <v-icon left>view_list</v-icon>
+          Cursuri & Laboratoare
+        </v-btn>
+        <v-btn @click="exportData" class="exportBtn" color="primary" large>
+          <v-icon left>cloud_download</v-icon>
+          Exportare csv
+        </v-btn>
+        <br>
+        <star-rating class="rating" :rating="generalRating"/>
 
-      <br>
-
-      <v-select v-model="selectedItem" class="selectBox" :items="titles" placeholder="Selecteaza" solo>Curs</v-select>
-      <span class="headline" style="margin-left: 1rem; font-weight: 600">
-        Dată: <span class="selectedDate">{{selectedDate}}</span>
-      </span>
-
-      <br>
-      <br>
-
-      <v-data-table :headers="headers" :items="tableItems" class="elevation-1" hide-actions>
-        <template slot="headers" slot-scope="props">
-          <th v-for="header in props.headers" :key="header.value">
-            <div class="headerCell">{{header.text}}</div>
-          </th>
-        </template>
-        <template slot="items" slot-scope="props">
-          <td class="text-xs-center">{{ props.item.qc0 || props.item.qc0 }}</td>
-          <td class="text-xs-center">{{ props.item.qc1 || props.item.ql1 }}</td>
-          <td class="text-xs-center">{{ props.item.qc2 || props.item.ql2 }}</td>
-          <td class="text-xs-center">{{ props.item.qc3 || props.item.ql3 }}</td>
-          <td class="text-xs-left">
-            <ul>
-              <li class="comment" v-for="row in props.item.additionalComments" :key="row">
-                {{row}}
-              </li>
-            </ul>
-          </td>
-        </template>
-      </v-data-table>
-
-      <br>
-
-      <div style="text-align: right">
-        <v-btn @click="exportTable" :disabled="headers == undefined || tableItems == undefined" outline large color="primary" style="margin-right: 0">
-          <v-icon left>file_download</v-icon>
-          Exportare tabel
+        <v-btn
+          @click="showNewItemDialog = !showNewItemDialog"
+          class="actionBtn"
+          dark
+          fab
+          color="primary"
+        >
+          <v-icon>add</v-icon>
         </v-btn>
       </div>
-    </div>
-    <mail-scheduler v-if="dataReady" :subject="subject" @input="pushSubject" v-model="showMailDialog" />
-    <schedule-editor v-if="dataReady" v-model="showScheduleDialog" />
-    <items-editor v-if="dataReady" :subject="subject" v-model="showItemsDialog" />
-  </v-card>
+      <br>
+      <div class="contentDiv">
+        <h1><span style="font-weight: 500; color: hsl(0, 0%, 49%)">Recenzii disponibile: </span>{{noReviews}} </h1>
+
+        <br>
+
+        <v-select v-model="selectedItem" class="selectBox" :items="titles" placeholder="Selecteaza" solo>Curs</v-select>
+        <span class="headline" style="margin-left: 1rem; font-weight: 600">
+          Dată: <span class="selectedDate">{{selectedDate}}</span>
+        </span>
+
+        <br>
+        <br>
+
+        <v-data-table :headers="headers" :items="tableItems" class="elevation-1" hide-actions>
+          <template slot="headers" slot-scope="props">
+            <th v-for="header in props.headers" :key="header.value">
+              <div class="headerCell">{{header.text}}</div>
+            </th>
+          </template>
+          <template slot="items" slot-scope="props">
+            <td class="text-xs-center">{{ props.item.qc0 || props.item.qc0 }}</td>
+            <td class="text-xs-center">{{ props.item.qc1 || props.item.ql1 }}</td>
+            <td class="text-xs-center">{{ props.item.qc2 || props.item.ql2 }}</td>
+            <td class="text-xs-center">{{ props.item.qc3 || props.item.ql3 }}</td>
+            <td class="text-xs-left">
+              <ul>
+                <li class="comment" v-for="row in props.item.additionalComments" :key="row">
+                  {{row}}
+                </li>
+              </ul>
+            </td>
+          </template>
+        </v-data-table>
+
+        <br>
+
+        <div style="text-align: right">
+          <v-btn @click="exportTable" :disabled="headers == undefined || tableItems == undefined" outline large color="primary" style="margin-right: 0">
+            <v-icon left>file_download</v-icon>
+            Exportare tabel
+          </v-btn>
+        </div>
+      </div>
+      <mail-scheduler v-if="dataReady" :subject="subject" @input="pushSubject" v-model="showMailDialog" />
+      <schedule-editor v-if="dataReady" v-model="showScheduleDialog" />
+      <items-editor v-if="dataReady" :subject="subject" v-model="showItemsDialog" />
+      <new-item v-if="dataReady" v-model="showNewItemDialog"/>
+    </v-card>
+  </div>
 </template>
 
 <script>
@@ -97,13 +110,15 @@ import StarRating from "@/components/StarRating.vue";
 import MailScheduler from "@/components/MailScheduler.vue";
 import ScheduleEditor from "@/components/ScheduleEditor.vue";
 import ItemsEditor from "@/components/ItemsEditor.vue";
+import NewItem from "@/components/NewItem.vue";
 
 export default {
   components: {
     StarRating,
     MailScheduler,
     ScheduleEditor,
-    ItemsEditor
+    ItemsEditor,
+    NewItem
   },
   created: function() {
     firebase
@@ -127,6 +142,7 @@ export default {
       showMailDialog: false,
       showScheduleDialog: false,
       showItemsDialog: false,
+      showNewItemDialog: false,
       dataReady: false
     };
   },
@@ -376,6 +392,11 @@ export default {
 </script>
 
 <style scoped>
+.actionBtn {
+  position: absolute;
+  right: 0;
+  top: 12rem;
+}
 .contentDiv {
   padding: 1rem;
   padding-top: 0rem;

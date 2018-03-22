@@ -1,26 +1,25 @@
 <template>
-  <v-dialog :value="value" @input="$emit('input')" max-width="50%">
-    <v-card class="mainCard">
-      <v-divider></v-divider>
-      <template v-for="(val, key, index) in items">
-        <div class="course" :key="index">
-          <div class="courseTitle">{{ val.shortTitle }}</div>
-          <div class="btnContainer">
-            <date-chooser class="chooser" v-model="dates[key]" :date="getDate(key)"/>
-            <time-chooser class="chooser" v-model="hours[key]" :time="getTime(key)"/>
-            <div style="display: inline-block">
-              <v-text-field solo v-model="deltas[key]" @input="(value) => setDuration(key, value)" style="width: 7rem" type="number" min="0.5" step="0.5" suffix="h"/>
+  <v-dialog :value="value" @input="$emit('input')" max-width="50%" scrollable>
+    <v-card>
+      <h1 class="text-xs-left" style="padding: 0.5rem; background: hsl(0, 0%, 89%)">Editare orar</h1>
+      <v-card-text class="mainCard">
+        <template v-for="(val, key, index) in items">
+          <div class="course" :key="index">
+            <div class="courseTitle">{{ val.shortTitle }}</div>
+            <div class="btnContainer">
+              <date-chooser class="chooser" v-model="dates[key]" :date="getDate(key)"/>
+              <time-chooser class="chooser" v-model="hours[key]" :time="getTime(key)"/>
+              <div style="display: inline-block">
+                <v-text-field solo v-model="deltas[key]" @input="(value) => setDuration(key, value)" style="width: 7rem" type="number" min="0.5" step="0.5" suffix="h"/>
+              </div>
+              <v-btn @click="deleteItem(key)" icon>
+                <v-icon color="red">delete</v-icon>
+              </v-btn>
             </div>
           </div>
-        </div>
-        <v-divider :key="`${index}_div`"></v-divider>
-      </template>
-    <div style="text-align: right">
-      <v-btn @click="updateDatabase" color="primary">
-        <v-icon>save</v-icon>
-        Save
-      </v-btn>
-    </div>
+          <v-divider :key="`${index}_div`"></v-divider>
+        </template>
+      </v-card-text>
     </v-card>
   </v-dialog>
 </template>
@@ -78,6 +77,7 @@ export default {
         Object.keys(this.subject.laboratoare).map(
           key => (this.subject.laboratoare[key] = this.items[key])
         );
+        this.updateDatabase();
       },
       deep: true
     },
@@ -152,6 +152,24 @@ export default {
         .database()
         .ref("discipline/" + this.$route.params.id)
         .set(this.subject);
+    },
+    deleteItem(key) {
+      if (
+        confirm("Sunteți sigur(ă) că vreți să ștergeți acest curs/laborator?")
+      ) {
+        if (this.subject.cursuri[key])
+          firebase
+            .database()
+            .ref("discipline/" + this.$route.params.id + "/cursuri/" + key)
+            .remove();
+        else if (this.subject.laboratoare[key])
+          firebase
+            .database()
+            .ref("discipline/" + this.$route.params.id + "/laboratoare/" + key)
+            .remove();
+        delete this.items[key];
+        this.$forceUpdate();
+      }
     }
   }
 };
@@ -159,8 +177,8 @@ export default {
 
 <style scoped>
 .mainCard {
-  padding: 2rem;
-  overflow: hidden;
+  padding: 0 2rem 1rem 2rem;
+  overflow-y: scroll;
 }
 
 .course {
