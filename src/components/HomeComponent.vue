@@ -1,5 +1,12 @@
 <template>
   <div class="mainContainer">
+    <div class="headlineContainer">
+      <div class="imageTitle">
+        <img src="../assets/icon-96x96.png" style="margin-right: 1rem" alt="">
+        <div class="display-3">Master SSEA</div>
+      </div>
+      <div class="headline" style="width: 100%; position: absolute; top: 4.5rem">Aplicație de administrare</div>
+    </div>
     <div class="cardsContainer">
       <v-card v-for="(disciplina, key) in discipline" :key="key" class="disciplina" :to="`subjects/${key}`" hover>
         <v-card-media :src="disciplina.imageURL" height="15rem"></v-card-media>
@@ -33,6 +40,17 @@ export default {
 .disciplina {
   width: 30%;
   margin: 0.5rem;
+}
+
+.headlineContainer {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 3rem;
+}
+
+.imageTitle {
+  display: flex;
 }
 
 .mainContainer {

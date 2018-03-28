@@ -22,6 +22,11 @@ export default new Router({
       path: "/subjects/:id",
       name: "subject",
       component: Subject
+    },
+    {
+      path: "/subjects/:id/:itemid",
+      name: "subject",
+      component: Subject
     }
   ]
 });

@@ -138,15 +138,31 @@ export default {
       qLaboratories: {},
       dates: {},
       answers: { cursuri: {}, laboratoare: {} },
-      selectedItem: null,
       showMailDialog: false,
       showScheduleDialog: false,
       showItemsDialog: false,
       showNewItemDialog: false,
-      dataReady: false
+      dataReady: false,
+      test: null
     };
   },
   computed: {
+    selectedItem: {
+      get: function() {
+        if (this.$route.params.itemid) {
+          const items = {
+            ...this.subject.cursuri,
+            ...this.subject.laboratoare
+          };
+          return items[this.$route.params.itemid].shortTitle;
+        } else {
+          return this.test;
+        }
+      },
+      set: function(newVal) {
+        this.test = newVal;
+      }
+    },
     selectedDate: function() {
       if (this.dates[this.selectedItem])
         return this.getDateTime(this.selectedItem);
